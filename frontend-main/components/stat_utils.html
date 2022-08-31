@@ -1,0 +1,74 @@
+<script>
+
+let restoID;
+
+
+
+function parseJwt(token){
+return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+  return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+}
+
+function getJWTData(){
+    return parseJwt(Cookies.get('jwt'));
+}
+
+function getCtx(callback){
+    if (getJWTData().role == "restaurant"){
+        $.getJSON('shop/restaurants/owner').then(function (response) {
+            if (response.restaurant._id !== undefined && response.restaurant._id !== null &&  response.restaurant._id.length > 0){
+                restoID = response.restaurant._id;
+            }else{
+                restoID = "";
+            }
+            callback();
+        });
+    }else {
+        let selectorValue = $( "#commercial-select").val();
+        if ( selectorValue !== undefined && selectorValue !== null &&  selectorValue.length > 0){
+            restoID = selectorValue;
+        }else{
+            restoID = "";
+        }
+        callback();
+    }
+
+}
+
+function selectRestoID(){
+    $("#stat-component-article-type").load("components/stat_article.html");
+    $("#stat-sales-int").load("components/stat_monthly_income_int.html");
+    $("#stat-sales-plot").load("components/stat_monthly_income_plot.html");
+    $("#stat-component-daily-income").load("components/stat_daily_income_plot.html");
+    $("#stat-component-daily-average").load("components/stat_daily_sales_average_plot.html");
+    $("#stat-component-daily-count").load("components/stat_daily_sales_count_plot.html");
+    $("#stat-component-daily-sales-count").load("components/stat_daily_sales_count_int.html");
+}
+
+
+function utils_ready() {
+    if (getJWTData().role == "commercial"){
+        $.getJSON("/shop/restaurants").then(function (response) {
+            let htmlRestaurantsSelector = '<select class="form-select" id="commercial-select" onchange="selectRestoID()"> <option value="" selected disabled>Sélectionner un restaurant pour avoir les graphiques</option>';
+            response.restaurants.forEach(element => {
+                htmlRestaurantsSelector += "<option value='"+element._id+"'>"+element.name+"</option>";
+            });
+            htmlRestaurantsSelector += "</select>";
+            $("#selector-for-commercial-wrapper").html(htmlRestaurantsSelector);
+            $("#selector-for-commercial-wrapper").addClass("d-sm-flex");
+            $("#selector-for-commercial-wrapper").removeClass("d-none");
+        });
+    }else if(getJWTData().role != "restaurant") {
+        $('#dashboard-content').html(`
+        <div class="alert alert-danger w-100" role="alert">
+            <center>INTERDIT POUR CE ROLE</center>
+            <div class="tenor-gif-embed" data-postid="21360312" data-share-method="host" data-aspect-ratio="1.77778" data-width="100%">
+                <a href="https://tenor.com/view/macron-passer-pas-non-lrem-gif-21360312">Macron Passer GIF</a>
+                </div> <script type="text/javascript" async src="https://tenor.com/embed.js">
+        </div>`);
+        $('#dashboard-content-short').addClass("d-none");
+    }
+}
+
+
+</script>

@@ -1,0 +1,51 @@
+<div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div
+        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">Quantité d'articles par type</h6>
+        <div class="dropdown no-arrow">
+        </div>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body" id="stat-article-wrapper">
+        <canvas id="stat-article" class="chartjs-render-monitor" height="400" width="400"></canvas>
+    </div>
+</div>
+
+<script>
+
+$( document ).ready(function() {
+    getCtx(function() {
+        $.getJSON('/statistics/quantity/'+restoID).then(function (response) {
+            if (response.length > 0){
+                const labelsStatArticle = Array.from(response, data => data._id.type);
+                const dataStatArticle = Array.from(response, data => data.amount);
+                const colorMapStatArticle = palette('tol', dataStatArticle.length).map(function(hex) {
+                    return '#' + hex;
+                });
+                $("stat-article-wrapper").html('<canvas id="stat-article" class="chartjs-render-monitor"></canvas>');
+                const componentCtx = document.getElementById('stat-article').getContext('2d');
+                const myChart = new Chart(componentCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labelsStatArticle,
+                        datasets: [{
+                            label: '# of articles per type',
+                            data: dataStatArticle,
+                            backgroundColor: colorMapStatArticle,
+                            borderWidth: 1
+                        }]
+                    },
+                });
+            }else{
+                $("#stat-article-wrapper").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+            }
+        }).fail(function (error) {
+            $("#stat-article-wrapper").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+        });
+    });
+
+});
+
+
+</script>

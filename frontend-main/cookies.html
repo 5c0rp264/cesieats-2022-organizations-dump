@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Cookies</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div id="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Cookies</h1>
+                </div>
+
+                <section class="section--white">
+        <div class="container container-small mt-3 mb-5 d-flex flex-column justify-content-center align-items-center">
+            <p class="mt-5">Le site que vous visitez utilise des fichiers informatiques nommés cookies. Ces fichiers permettent
+                d'accéder
+                à des informations déjà stockées dans votre terminal et d'y inscrire des informations.
+            </p>
+            <span class="font-weight-bold section--blue" style="font-size:12px;">Cookies exemptés de consentement préalable</span><br/>
+            Nous utilisons ces cookies pour faciliter la navigation sur le site notamment en mémorisant certaines
+            saisies ou sélections pour vous permettre de ne pas avoir à resaisir ces informations.
+            Ces cookies ne peuvent pas, techniquement, être désactivés depuis le site. Vous pouvez néanmoins vous
+            opposer à l'utilisation de ces cookies, exclusivement en paramétrant votre navigateur. Ce paramétrage dépend
+            du navigateur que vous utilisez, mais il est en général simple à réaliser : en principe, vous pouvez soit
+            activer une fonction de navigation privée soit uniquement interdire ou restreindre les cookies. Attention,
+            il se peut que des cookies aient été enregistrés sur votre périphérique avant le paramétrage de votre
+            navigateur : dans ce cas, effacez votre historique de navigation, toujours en utilisant le paramétrage de
+            votre navigateur.<br/>
+            <br/>
+            <br/><br/>
+            <span class="section--blue font-weight-bold" style="font-size:12px;">Liste des cookies utilisés par des services tiers</span><br/>
+            <table style="width:100%;border-collapse: collapse;">
+                <tr>
+                    <td style="border:1px solid #666;padding:10px 2%;"> Aucun.
+                    </td>
+                </tr>
+            </table>
+            <br/><br/>
+            Pour en savoir plus sur les cookies et traceurs, nous vous invitons à consulter le site de la CNIL : <a
+                href="https://www.cnil.fr/fr" target="_blank">www.cnil.fr</a>
+        </div>
+    </section>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <div id="copyright"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div id="logout_modal"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<script>
+    $(function () {
+        $("#sidebar").load("/components/sidebar.html");
+        $("#topbar").load("/components/topbar.html");
+        $("#copyright").load("/components/footer.html");
+        $("#logout_modal").load("/components/logout_modal.html");
+
+        $(".current-year").html(new Date().getFullYear());
+    });
+</script>
+</body>
+
+</html>

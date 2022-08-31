@@ -1,0 +1,159 @@
+
+<!-- Custom fonts for this template-->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion h-100" id="accordionSidebar">
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fa-solid fa-martini-glass-citrus"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Cesi Eats</div>
+    </a>
+
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item" data-roles="user">
+        <a class="nav-link collapsed" href="/restaurants"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-utensils"></i>
+            <span>Restaurants à proximité</span>
+        </a>
+    </li>
+
+    <li class="nav-item" data-roles="user,deliverer,dev">
+        <a class="nav-link collapsed" href="/profil"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-person"></i>
+            <span>Mon profil</span>
+        </a>
+    </li>
+
+    <li class="nav-item" data-roles="restaurant">
+        <a class="nav-link collapsed" href="/mon-restaurant"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-kitchen-set"></i>
+            <span>Mon restaurant</span>
+        </a>
+    </li>
+
+    <li class="nav-item" data-roles="restaurant">
+        <a class="nav-link collapsed" href="/articles"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-burger"></i>
+            <span>Gestion des articles</span>
+        </a>
+    </li>
+
+    <li class="nav-item" data-roles="restaurant">
+        <a class="nav-link collapsed" href="/menus"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-burger"></i>
+            <span>Gestion des menus</span>
+        </a>
+    </li>
+    
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item" data-roles="restaurant">
+        <a class="nav-link collapsed" href="/livraison-en-cours"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-fw fa-person-biking"></i>
+            <span>Livraisons en cours</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item" data-roles="restaurant,user">
+        <a class="nav-link collapsed" href="/historique-commandes"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Historique des commandes</span>
+        </a>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item" data-roles="restaurant,commercial">
+        <a class="nav-link collapsed" href="/dashboard"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Statistiques</span>
+        </a>
+    </li>
+
+    <li class="nav-item" data-roles="commercial">
+        <a class="nav-link collapsed" href="/gestion-des-comptes"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-users"></i>
+            <span>Gestion des comptes</span>
+        </a>
+    </li>
+
+
+    <li class="nav-item" data-roles="commercial">
+        <a class="nav-link" href="suivi-commandes">
+            <i class="fa-solid fa-cart-flatbed-suitcase"></i>
+            <span>Suivi des commandes</span></a>
+    </li>
+
+
+    <li class="nav-item" data-roles="tech">
+        <a class="nav-link" href="logs">
+            <i class="fas fa-solid fa-file-lines"></i>
+            <span>Éditer les logs</span></a>
+    </li>
+
+    <li class="nav-item" data-roles="dev,tech">
+        <a class="nav-link" href="composants">
+            <i class="fa-solid fa-file-export"></i>
+            <span>Gestion des composants</span></a>
+    </li>
+
+    <li class="nav-item" data-roles="tech">
+        <a class="nav-link" href="statistiques-serveur.html">
+            <i class="fa-solid fa-file-export"></i>
+            <span>Statistiques serveurs</span></a>
+    </li>
+
+    <li class="nav-item" data-roles="restaurant,user,deliverer">
+        <a class="nav-link" href="/parrainage">
+            <i class="fa-solid fa-fw fa-user-group"></i>
+            <span>Parrainage</span></a>
+    </li>
+
+    <li class="nav-item" data-roles="deliverer">
+        <a class="nav-link collapsed" href="/livreur-choix-commande"
+           aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fa-solid fa-truck"></i>
+            <span>Livraisons</span>
+        </a>
+    </li>
+
+</ul>
+
+<script>
+
+    function parseJwt(token){
+        return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+    }
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    $(document).ready(() => {
+
+        let role = parseJwt(getCookie('jwt')).role;
+        $('[data-roles]').each(function(){
+            if(!$(this).data('roles').split(',').includes(role)) {
+                $(this).addClass('d-none');
+            }
+        });
+
+    });
+
+</script>

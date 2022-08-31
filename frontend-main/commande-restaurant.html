@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Commandes</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script src="/js/bootstrap-show-notification.js"></script>
+
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid" id="content-container">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h3 class="mb-0 text-gray-800">Menus</h3>
+                        <a href="panier" class="btn btn-primary my-2">
+                            Mon panier
+                            <i class="fas fa-cart-shopping text-white-100"></i> 
+                        </a>
+                    </div>
+
+
+                    <div class="row justify-content-around" id="menus">
+                        <!-- Default Card Example -->
+                        <div class="card col-sm-5 col-xl-3 offset-xl-1 mb-3 px-0" v-for="menu in menus_data">
+                            <div class="card-header w-100">
+                                <div v-if="menu.image" class="mb-2">
+                                    <img class="rounded" :src="menu.image" width="100%" v-if="menu.image" />
+                                </div>
+                                <div>
+                                    <a :href="`javascript:addToCartMenu('${menu._id}');`" class="float-right text-secondary">
+                                        {{ menu.price }} <i class="fas fa-cart-shopping"></i>
+                                    </a>
+                                    <b>{{ menu.name }}</b>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {{ menu.description }}
+                                <div class="mt-2">
+                                    <b >Composition :</b>
+                                    <div class="w-100 border rounded my-2" v-for="article in menu.articles">
+                                        <b>{{ article.name }}</b>
+                                        <br>
+                                        <small class=" pl-2">{{ article.category }} • {{ article.type }}</small>
+                                        <br>
+                                        <p class="pl-2">{{ article.description }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function checkResto(){
+                            const curRestoID = Cookies.get('cur-restoID');
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const restoID = urlParams.get('restoID');
+                            if (curRestoID !== undefined && curRestoID !== null &&  curRestoID.length > 0){
+                                if (restoID != curRestoID) {
+                                    const notification = $.showNotification({
+                                        body: "<h4>Erreur</h4><div><p>Impossible d'ajouter cette article car il provient d'un restaurant différent.<br>Merci de retirer les articles d'un restaurant différent pour poursuivre.</p><center><a class='btn btn-info mr-3' href='panier.html' >Accéder au panier</a></center></div>",
+                                        type: "danger",
+                                        duration: 3000
+                                    })
+                                    return false;
+                                }
+                                
+                            }else{
+                                Cookies.set('cur-restoID',restoID);
+                            }
+                            return true;
+                        }
+                        function addToCartMenu(menuID){
+                            if (checkResto()) {
+                                const cartData = Cookies.get('cart-menu');
+                                if (cartData !== undefined && cartData !== null &&  cartData.length > 0){
+                                    let cart = JSON.parse(cartData);
+                                    cart.push(menuID);
+                                    Cookies.set('cart-menu', JSON.stringify(cart));
+                                }else{
+                                    Cookies.set('cart-menu', JSON.stringify([menuID]));
+                                }
+                                successCart();
+                            }
+                        }
+
+                        
+
+                        function getMenusData(){
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const restoID = urlParams.get('restoID');
+                            $.getJSON('/shop/menus/restaurants/'+restoID).then(function (response) {
+                                response = response.menus;
+                                for (let i = 0; i < response.length; i++) {
+                                    response[i].price =  response[i].price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                }
+                                var vueNotification = new Vue({
+                                    el: '#menus',
+                                    data: {
+                                        menus_data: response,
+                                    }
+                                });
+                                
+                            });
+
+                        }
+
+                    </script>
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h3 class="mb-0 text-gray-800">Articles</h3>
+                    </div>
+
+
+                    <div class="row justify-content-around" id="articles">
+                        <!-- Default Card Example -->
+                        <div class="card col-sm-5 col-xl-3 offset-xl-1 mb-3 px-0" v-for="article in articles_data">
+                            <div class="card-header w-100">
+                                <div v-if="article.image" class="mb-2">
+                                    <img class="rounded" :src="article.image" width="100%" v-if="article.image" />
+                                </div>
+                                <div>
+                                    <a :href="`javascript:addToCartArticle('${article._id}');`" class="float-right text-secondary">
+                                        {{ article.price }} <i class="fas fa-cart-shopping"></i>
+                                    </a>
+                                    <b>{{ article.name }}</b>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                {{ article.description }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+
+                        function addToCartArticle(articleID){
+                            if (checkResto()) {
+                                const cartData = Cookies.get('cart-article');
+                                if (cartData !== undefined && cartData !== null &&  cartData.length > 0){
+                                    let cart = JSON.parse(cartData);
+                                    cart.push(articleID);
+                                    Cookies.set('cart-article', JSON.stringify(cart));
+                                }else{
+                                    Cookies.set('cart-article', JSON.stringify([articleID]));
+                                }
+                                successCart();
+                            }
+                        }
+
+                        function getArticlesData(){
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const restoID = urlParams.get('restoID');
+                            $.getJSON('/shop/articles/restaurants/'+restoID).then(function (response) {
+                                response = response.articles;
+                                for (let i = 0; i < response.length; i++) {
+                                    response[i].price =  response[i].price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                }
+                                var vueNotification = new Vue({
+                                    el: '#articles',
+                                    data: {
+                                        articles_data: response,
+                                    }
+                                });
+                                
+                            });
+
+                        }
+
+
+
+                        function successCart(){
+                            const notification = $.showNotification({
+                                body: "<h4>Ajouté avec succès</h4><div><center><a class='btn btn-info mr-3' href='panier' >Accéder au panier</a></center></div>",
+                                type: "info",
+                                duration: 3000
+                            })
+                        }
+
+
+
+                        $( document ).ready(function() {
+                            const queryString = window.location.search;
+                            const urlParams = new URLSearchParams(queryString);
+                            const restoID = urlParams.get('restoID');
+                            if (restoID !== undefined && restoID !== null &&  restoID.length > 0){
+                                getMenusData();
+                                getArticlesData();
+                            } else {
+                                $('#content-container').html(`
+                                <div class="alert alert-danger w-100" role="alert">
+                                    <center>
+                                        VOUS DEVEZ CHOISIR UN RESTO
+                                        <div class="tenor-gif-embed w-75" data-postid="17941557" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+                                            <a href="https://tenor.com/view/decisions-tough-cute-food-fat-kid-gif-17941557">Decisions Tough GIF</a>
+                                        </div>
+                                        <script type="text/javascript" async src="https://tenor.com/embed.js">
+                                    </center>
+                                </div>`);
+                            }
+                            //window.setInterval(getNotificationsData, 5000);
+                        });
+
+                    </script>
+
+
+                    
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

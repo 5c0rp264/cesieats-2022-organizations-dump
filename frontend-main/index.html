@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script src="/js/bootstrap-show-notification.js"></script>
+
+    <title>Cesi Eats</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
+        :root {
+            --landing-page-color: #3a4052;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        h1 {
+            font-weight: 300;
+            font-size: 60px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        .showcase {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #fff;
+            background: linear-gradient( rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) ),url('https://cdn.pixabay.com/photo/2016/04/25/06/39/food-1351287_960_720.jpg');
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+        }
+
+        .content {
+            z-index: 2;
+        }
+    </style>
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div class="position-absolute" style="top:15px;right:30px;">
+                <a href="connexion" class="text-light" id="connect">Se connecter</a>
+                <a href="dashboard" class="text-light d-none" id="account">Mon interface</a>
+            </div>
+            <script>
+                function parseJwt(token){
+                    return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join('')));
+                }
+
+                function getJWTData(){
+                    return parseJwt(Cookies.get('jwt'));
+                }
+                $( document ).ready(function() {
+                    let data = getJWTData();
+                    if (data != undefined && data != null ){
+                        $("#connect").addClass('d-none');
+                        $("#account").removeClass('d-none');
+                    }
+                });
+            </script>
+            <!-- Main Content -->
+            <section class="showcase">
+                <div class="content">
+                    <h1>Cesi Eats</h1>
+                    <h3>Plus de matières grasses que de matières grises !</h3>
+                    <form action="/restaurants" class="d-flex justify-content-center align-items-center mt-5" style="width:120%;margin-left:-10%;">
+                        <button class="btn btn-outline-light m-2 p-4" type="submit">Voir&nbsp;les&nbsp;restaurants</button>
+                    </form>
+                </div>
+            </section>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <script>
+        $(function(){
+            $("#copyright").load("components/footer.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

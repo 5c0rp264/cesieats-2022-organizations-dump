@@ -1,0 +1,195 @@
+<nav id="navbar-top" class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+    <!-- Sidebar Toggle (Topbar) -->
+    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+        <i class="fa fa-bars"></i>
+    </button>
+
+    <!-- Topbar Search -->
+
+    <div class="d-flex justify-content-center align-items-center">
+        <h1 class="h2 text-gray-800 text-uppercase" id="topbar-pseudo">CESI EATS</h1>
+    </div>
+
+    <!-- Topbar Navbar -->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- Nav Item - Search Dropdown (Visible Only XS) -->
+        <li class="nav-item d-sm-none">
+            <a class="nav-link" href="javascript:goToLoginPage()" onclick="goToLoginPage()" id="searchDropdown"
+               role="button">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </a>
+        </li>
+
+        <!-- <script src="vendor/jquery/jquery.min.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+        <script src="/js/notify.js"></script>
+        <script src="/js/notification.js"></script>
+        <!-- Nav Item - Alerts -->
+        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+              rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
+        <li class="nav-item d-flex justify-content-center mx-1 align-items-center" id="restaurant-state-dropdown">
+            <input type="checkbox" id="current-restaurant-state" data-toggle="toggle" data-on="Restaurant&nbsp;ouvert"
+                   data-off="Restaurant&nbsp;fermé" data-onstyle="success" data-offstyle="danger"
+                   onchange="switchRestaurantState(this.checked)">
+        </li>
+
+        <li class="nav-item dropdown no-arrow mx-1" id="notification-dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-bell fa-fw"></i>
+                <!-- Counter - Alerts -->
+                <span id="badge-notification" class="badge badge-danger badge-counter d-none">0</span>
+            </a>
+
+            <!-- Dropdown - Alerts -->
+            <div id="notification-dropdown-tab"
+                 class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                 aria-labelledby="alertsDropdown">
+                <h6 class="dropdown-header">
+                    Notifications
+                </h6>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                    <div>
+                        Pas de nouvelle notification
+                    </div>
+                </a>
+                <a class="dropdown-item text-center small text-gray-500" href="/notifications.html">Voir toutes mes
+                    notifications</a>
+            </div>
+        </li>
+
+
+        <div class="topbar-divider d-none d-sm-block"></div>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/connexion.html" id="userDropdown-login" role="button"
+               aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Se connecter</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - User Information -->
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown-utility" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small" id="topbar-username">Non connecté</span>
+                <img class="img-profile rounded-circle"
+                     src="img/undraw_profile.svg">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                 aria-labelledby="userDropdown">
+                <a class="dropdown-item" href="profil">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Compte
+                </a>
+                <a class="dropdown-item" href="#">
+                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Paramètres
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Se déconnecter
+                </a>
+            </div>
+        </li>
+    </ul>
+</nav>
+<script src="/node_modules/cookie-notice/dist/cookie.notice.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        new cookieNoticeJS({
+            'messageLocales': {
+                'fr': 'Le respect de votre privée est notre priorité. ' +
+                    'Lors de votre visite sur notre site des fichiers informatiques nommés cookies sont déposés sur votre terminal. Ces cookies sont utilisés pour la navigation, le fonctionnement du site et les mesures d\'audience pour l\'éditeur. <br> Nous ne collectons pas vos données personnelles au travers des cookies à des fins publicitaires ni pour nous ni pour des tiers.'
+            },
+            'buttonLocales': {
+                'fr': 'OK',
+            },
+            'learnMoreLinkEnabled': true,
+            'learnMoreLinkHref': '/cookies/',
+            'noticeBgColor': '#242d73',
+            'buttonBgColor': 'blue',
+            'linkColor': 'white',
+            'expiresIn': 1,
+        });
+
+        let role = parseJwt(getCookie('jwt')).role;
+        if (role !== 'restaurant') {
+            $('#restaurant-state-dropdown').removeClass('d-flex').addClass('d-none');
+        }
+
+        updateTopBarName();
+
+        if (document.cookie.indexOf("jwt") > -1) {
+            $("#userDropdown-utility").removeClass('d-none');
+            $("#userDropdown-login").addClass('d-none');
+        } else {
+            $("#userDropdown-utility").addClass('d-none');
+            $("#userDropdown-login").removeClass('d-none');
+        }
+
+        if (role === 'restaurant') updateCurrentState();
+    });
+
+    async function updateTopBarName() {
+        const response = await fetch('/accounts/current/user');
+        const data = await response.json();
+        if (data !== undefined && data !== null && data.length > 0) {
+            console.log(data[0])
+            $("#topbar-username")[0].innerText = data[0].name + " " + data[0].lastname;
+            $("#topbar-pseudo").text(data[0].pseudo)
+        }
+    }
+
+    function goToLoginPage() {
+        location.replace('/connexion.html')
+    }
+
+    function parseJwt(token) {
+        return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join('')));
+    };
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    async function switchRestaurantState(currentState) {
+        let id = parseJwt(getCookie('jwt')).uid;
+
+        await fetch('/shop/restaurants/owner')
+            .then(res => res.json()) // or res.json()
+            .then(res => {
+                let restaurantId = res.restaurant._id
+                fetch("/shop/restaurants/" + restaurantId,
+                    {
+                        body: JSON.stringify({isOpen: currentState, restaurant: restaurantId}),
+                        method: "PUT",
+                        headers: {'Content-Type': 'application/json'}
+                    });
+            });
+    }
+
+    async function updateCurrentState(currentState) {
+        let id = parseJwt(getCookie('jwt')).uid;
+        await fetch('/shop/restaurants/owner')
+            .then(res => res.json()) // or res.json()
+            .then(res => {
+                let restaurant = res.restaurant;
+
+                if ($("#current-restaurant-state")[0].checked !== restaurant.isOpen) {
+                    $("#current-restaurant-state").bootstrapToggle(restaurant.isOpen ? "on" : "off");
+                }
+            });
+    }
+</script>

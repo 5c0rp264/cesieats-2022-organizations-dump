@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic.min.css" integrity="sha512-LeCmts7kEi09nKc+DwGJqDV+dNQi/W8/qb0oUSsBLzTYiBwxj0KBlAow2//jV7jwEHwSCPShRN2+IWwWcn1x7Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Cesi Eats - Payer une commande</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <style>
+        .iconic-circle-check { 
+            width: 96px; 
+            height:96px; 
+            fill: green;
+            stroke: green;
+        }
+    </style>
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <div id="topbar"></div>
+                <!-- Topbar -->
+                
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <div class="card px-4" id="payment-form">
+                        <p class="h3 py-3">Informations de paiement</p>
+                        <div class="row gx-3">
+                            <div class="col-12">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Nom du titulaire de la carte</p>
+                                    <input class="form-control mb-3" type="text" placeholder="Barry Allen" value="">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Numéro de carte</p>
+                                    <input class="form-control mb-3" type="text" placeholder="1234 5678 435678" id="card-num">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">Date d'expiration</p>
+                                    <input class="form-control mb-3" type="text" placeholder="MM/YYYY">
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex flex-column">
+                                    <p class="text mb-1">CVV/CVC</p>
+                                    <input class="form-control mb-3 pt-2 " type="password" placeholder="***">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="btn btn-primary mb-3 float-right" onclick="makeFakePayment()">
+                                    <span class="ps-3">Payer</span>
+                                    <span class="fas fa-arrow-right"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card px-4 d-none" id="loader">
+                        <p class="h3 py-3">Validation du paiement en cours</p>
+                        <div class="row gx-3 my-5">
+                            <div class="col-12 my-5">
+                                <div class="d-flex w-100 justify-content-center">
+                                    <span class="spinner-grow text-primary mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-secondary mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-success mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-danger mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-warning mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-info mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                    <span class="spinner-grow text-dark mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                </div>
+
+                            </div>
+                            <div class="d-flex w-100 justify-content-center">
+                                <p>Vérification de votre paiement...<p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        function getParameters(){
+            // Address of the current window
+            address = window.location.search
+
+            // Returns a URLSearchParams object instance
+            parameterList = new URLSearchParams(address)
+
+            // Created a map which holds key value pairs
+            let map = new Map()
+
+            // Storing every key value pair in the map
+            parameterList.forEach((value, key) => {
+                map.set(key, value)
+            })
+
+            // Returning the map of GET parameters
+            return map
+        }
+
+
+
+        $( document ).ready(function() {
+            console.log("fuck")
+            console.log(getParameters());
+            console.log((!!getParameters().get('orderID')));
+            if (!(!!getParameters().get('orderID'))){
+                $("#payment-form").html(`
+                    <center class="my-5">Erreur, orderID non spécidié.</center>
+                `);
+            }
+        });
+
+        function makeFakePayment(){
+            $("#loader").removeClass("d-none");
+            $("#payment-form").addClass("d-none");
+
+            setTimeout(function(){
+
+                if ($("#card-num").val() == "44600"){
+                    $("#loader").html(`
+                    <div class="d-flex w-100 justify-content-center my-2 pt-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="red" class="bi bi-shield-lock" viewBox="0 0 16 16">
+                            <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                            <path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415z"/>
+                        </svg>
+                    </div>
+                    <div class="d-flex w-100 justify-content-center pt-5">
+                        <p>Paiement refusé</p>
+                    </div>
+
+                    
+                    `);
+                }else{
+                    $("#loader").html(`
+                    <div class="d-flex w-100 justify-content-center my-2 pt-5">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#86e22a" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                        </svg>
+                    </div>
+                    <div class="d-flex w-100 justify-content-center pt-5">
+                        <p>Paiement validé</p>
+                    </div>
+
+                    
+                    `);
+                    let orderID = getParameters().get('orderID');
+                    $.ajax({
+                        contentType: 'application/json',
+                        data: JSON.stringify({ "isPaid": true }),
+                        dataType: 'json',
+                        success: function(data){
+                            console.log("Validated order");
+                        },
+                        error: function(){
+                            console.log("ERREUR PEUT PAS VALIDEYYYY LA");
+                        },
+                        processData: false,
+                        type: 'PUT',
+                        url: '/orders/orders/'+orderID
+                    });
+                }
+                
+
+            },3000);
+        }
+
+
+
+
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+
+
+
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

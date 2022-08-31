@@ -1,0 +1,159 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "CESI EATS - Shop API",
+    "description": "Cette documentation explique les différents endpoints contenu dans le service dédié à la gestion des restaurants de CESI EATS"
+  },
+  "host": "localhost:8090",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Notifications",
+      "description": "Endpoints"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "jwt",
+      "in": "cookies"
+    }
+  },
+  "paths": {
+    "/id/{notificationID}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Permet d'obtenir une notification avec son identifiant et de mettre à jour son état",
+        "parameters": [
+          {
+            "name": "notificationID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère toutes les notifications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "latest/{NLatest}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère les X dernières notifications",
+        "parameters": [
+          {
+            "name": "NLatest",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/unread/{markAsRead?}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère l'ensemble des notifications non lues",
+        "parameters": [
+          {
+            "name": "markAsRead?",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/markAsRead": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Change l'état de toutes les notifications d'un utilisateur",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/create": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Permet de créer une nouvelle notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "example": "any"
+                },
+                "user_id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}

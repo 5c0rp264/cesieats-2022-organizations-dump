@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Livraison</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script src="/js/bootstrap-show-notification.js"></script>
+
+    <!-- Custom styles for this page -->
+    
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Gestion de vos livraisons</h1>
+                    <p class="mb-4">Cette interface regroupe l'ensemble des commandes à traiter pour votre restaurant.</p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">A traiter</h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="to-treat-table">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date/Heure</th>
+                                            <th>Contenu</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(order,i) in orders">
+                                            <td class="align-middle text-center">{{ order.timestamp  }}</td> 
+                                            <td class="align-middle">
+                                                <b>Prix : {{ order.price }}</b>
+                                                <br>
+                                                <div v-if="order.menus.length">
+                                                    <b>Menus :</b>
+                                                    <div v-for="menu in order.menus">
+                                                        {{ menu.count }} x
+                                                        {{ menu.name }}
+                                                    </div>
+                                                </div>
+                                                <div v-if="order.articles.length">
+                                                    <b>Articles :</b>
+                                                    <div v-for="article in order.articles">
+                                                        {{ article.count }} x
+                                                        {{ article.name }}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td :id="`validate-${order._id}`" class="align-middle text-center">
+                                                <button v-if="order.status.length == 1" class="btn btn-success" :onclick="`markAsValidated('${order._id}')`">La commande<br>est prête</button>
+                                                <button v-else-if="order.status.length == 3" class="btn btn-primary" :onclick="`markAsInDelivery('${order._id}', this)`">Le livreur<br>est là!</button>
+                                                <p v-else-if="order.status.length == 2">Un livreur va venir la chercher !</p>
+                                                <a v-else class="btn btn-primary" :href="`/suivi-livraison?order=${order._id}`" >Suivre la livraison</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <script>
+
+                                function markAsValidated(orderID){
+                                    $.ajax({
+                                            type: "PUT",
+                                            dataType: "json",
+                                            url: '/orders/orders/'+orderID+'/restaurants/'+restoID+'/validate',
+                                        }).then((response) => {
+                                            reloadPageData();
+                                        });
+                                }
+                                function markAsInDelivery(orderID, index){
+                                    $.ajax({
+                                            type: "PUT",
+                                            dataType: "json",
+                                            url: '/orders/orders/'+orderID+'/restaurants/'+restoID+'/inDelivery',
+                                        }).then((response) => {
+                                            reloadPageData();
+                                        });
+                                }
+
+
+                                let restoID ="";
+                                let vueRestaurantOrder;
+                                function reloadPageData(){
+                                    $.getJSON('shop/restaurants/owner').then(function (response) {
+                                        if (response.restaurant._id !== undefined && response.restaurant._id !== null &&  response.restaurant._id.length > 0){
+                                            restoID = response.restaurant._id;
+                                        }
+                                        $.getJSON('/orders/orders/restaurants/current/'+restoID).then(function (response) {
+                                            console.log(response);
+                                            response = response.order;
+                                            for (let i = 0; i < response.length; i++) {
+                                                const dateOrder = new Date(response[i].timestamp);
+                                                let hours = dateOrder.getHours();
+                                                let mins = dateOrder.getMinutes();
+                                                if (hours   < 10) {hours   = "0"+hours;}
+                                                if (mins   < 10) {mins   = "0"+mins;}
+                                                response[i].timestamp = dateOrder.getDate()+"/"+(dateOrder.getMonth()+1)+"/"+dateOrder.getFullYear()+" "+hours+":"+mins;
+
+                                                response[i].price =  response[i].price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                            }
+
+                                            console.log(response);
+                                            if (vueRestaurantOrder == undefined ){
+                                                vueRestaurantOrder = new Vue({
+                                                    el: '#to-treat-table',
+                                                    data: {
+                                                        orders: response,
+                                                    }
+                                                });
+                                            }else{
+                                                vueRestaurantOrder.orders = response
+                                            }
+                                        });
+                                    });
+                                }
+
+
+                                $( document ).ready(function() {
+                                    reloadPageData();
+                                    window.setInterval(function(){
+                                        reloadPageData();
+                                    }, 4000);
+                                });
+                                
+                            </script>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

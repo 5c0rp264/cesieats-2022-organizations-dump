@@ -1,0 +1,280 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "CESI EATS - Shop API",
+    "description": "Cette documentation explique les différents endpoints contenu dans le service dédié à la gestion des restaurants de CESI EATS"
+  },
+  "host": "localhost:8090",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Shops",
+      "description": "Endpoints"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "jwt",
+      "in": "cookies"
+    }
+  },
+  "paths": {
+    "/{articleID}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet d'éditer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "delete": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de supprimer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer la liste des restaurants",
+        "parameters": [],
+        "responses": {}
+      },
+      "post": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de créer un restaurant",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/restaurants/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de récupérer les menus propres à un restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/restaurants/{restaurantID}/categories/{category}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer les articles pour un restaurant en spécifiant une catégorie précise",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/restaurants/{restaurantID}/types/{type}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer les articles pour un restaurant en spécifiant un type précis",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/{menuID}": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de récupérer tous les menus",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet d'éditer un menu",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "delete": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de supprimer un menu",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/owner": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer un restaurant en fonction de son propriétaire",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer un restaurant avec son identifiant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet d'éditer un restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/{restaurant}": {
+      "delete": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de supprimer un restaurant",
+        "parameters": [
+          {
+            "name": "restaurant",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/categories/{category}": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer les restaurants correspondants à une catégorie",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}

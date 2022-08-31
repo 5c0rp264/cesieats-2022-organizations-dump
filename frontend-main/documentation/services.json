@@ -1,0 +1,1324 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "CESI EATS - API",
+    "description": "Cette documentation explique les différents endpoints contenu dans les services de CESI EATS"
+  },
+  "host": "localhost:8090",
+  "basePath": "/",
+  "tags": [
+
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "jwt",
+      "in": "cookies"
+    }
+  },
+  "paths": {
+    "/orders/orders/": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes",
+        "parameters": [],
+        "responses": {}
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/orders/orders/history": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de créer une commande",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/orders/orders/{orderID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "En fonction du rôle de l'utilisateur cet endpoint permet d'obtenir l'historique des commandes d'un restaurant, d'un utilisateur...",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "/orders/delete": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de supprimer une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/{orderID}/restaurants/{restaurantID}/validate": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un restaurant de valider une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/restaurants/current/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes à traiter / suivre pour le restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/restaurants/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes pour un restaurant spécifique",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/clients/{clientID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un client de récupérer l'ensemble de ses commandes",
+        "parameters": [
+          {
+            "name": "clientID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/{orderID}/deliverers/{delivererID}/accept": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un livreur d'accepter une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "delivererID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/orders/{orderID}/deliverers/{delivererID}/refuse": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un livreur de refuser une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "delivererID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Cet endpoint permet d'accéder à la page d'accueil de l'interface CESI EATS",
+        "description": "En fonction de l'état de la présence d'un JWT dans les cookies l'utilisateur de cet endpoint est susceptible d'être redirigé soit sur la page d'accueil du site soit sur son tableau de bord",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/{path}": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Cet endpoint permet d'accéder à n'importe quelle page",
+        "description": "Si l'utilisateur est connecté et est un restaurateur et que ce dernier n'a pas encore effectué la configuration de son restaurant alors la seule page auquel il aura accès sera celle pour initialiser son restaurant",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "cookie",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/compte/deconnexion": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Permet à un utilisateur connecté de se déconnecter et en supprimant tout ses cookies",
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/restaurant/{path}": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Cet endpoint est une version sécurisée des chemins classiques",
+        "description": "Cette version spécifique permet d'accéder de manière sécurisée aux différents PATH propre aux services de restauration, ces URLs sont ensuite filtrées par le proxy pour bien s'assurer du rôle de la personne tentant d'y accéder.",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/components/list": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Permet d'obtenir la liste des composants",
+        "description": "Réserver à l'équipe technique la liste des composants permet de visualiser l'ensemble du contenu des briques réutilisables de CESI EATS",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/components/download/{comp}": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Permet de télécharger lun composant spécifique",
+        "description": "Afin d'obtenir une version locale d'un composant pour l'éditer et possiblement l'upload cet endpoint permet de télécharger n'importe lequel d'entre eux en s'assurant bien du rôle de l'utilisateur",
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/components/logs": {
+      "get": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Permet d'afficher les logs de téléchargement et d'ajout de composants",
+        "description": "Les composants sont sujets à être téléchargés ou bien ajoutés, cet endpoint permet d'obtenir la liste de toutes les actions effectués sur ces derniers et des utilisateurs associés ainsi que la date et l'heure (timestamp) de l'action",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/components/upload": {
+      "post": {
+        "tags": [
+          "Frontend"
+        ],
+        "summary": "Permet d'ajouter un composant spécifique",
+        "description": "Le service technique doit pouvoir ajouter des briques réutilisables à souhait dans la plateforme CESI EATS cet endpoint permet d'ajouter ou de réecrire un composant existant ou non en chargeant son propre fichier",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "content": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/shop/{articleID}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet d'éditer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "delete": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de supprimer un article",
+        "parameters": [
+          {
+            "name": "articleID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer la liste des restaurants",
+        "parameters": [],
+        "responses": {}
+      },
+      "post": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de créer un restaurant",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/shop/restaurants/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de récupérer les menus propres à un restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/restaurants/{restaurantID}/categories/{category}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer les articles pour un restaurant en spécifiant une catégorie précise",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/restaurants/{restaurantID}/types/{type}": {
+      "get": {
+        "tags": [
+          "Articles"
+        ],
+        "description": "Permet de récupérer les articles pour un restaurant en spécifiant un type précis",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/{menuID}": {
+      "get": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de récupérer tous les menus",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet d'éditer un menu",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "delete": {
+        "tags": [
+          "Menus"
+        ],
+        "description": "Permet de supprimer un menu",
+        "parameters": [
+          {
+            "name": "menuID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/owner": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer un restaurant en fonction de son propriétaire",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/shop/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer un restaurant avec son identifiant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet d'éditer un restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/{restaurant}": {
+      "delete": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de supprimer un restaurant",
+        "parameters": [
+          {
+            "name": "restaurant",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/shop/categories/{category}": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "description": "Permet de récupérer les restaurants correspondants à une catégorie",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/statistics/quantity/{restoId}/{type}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir la quantité d'article d'un restaurant pour un type spécifique",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/quantity/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir la quantité d'article d'un restaurant pour chaque type",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/overallquantity/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir la quantité générale d'article d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/price/average/{restoId}/{type}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le prix moyen d'un type au sein d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/price/average/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le prix moyen d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/average/month/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le chiffre d'affaires moyen mensuel d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/average/day/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le chiffre d'affaires moyen quotidien d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/quantity/month/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le nombre de vente moyenne mensuel d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/quantity/day/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le nombre de vente moyenne quotidienne d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/sum/day/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le total des ventes quotidiennes d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/sum/month/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le total des ventes mensuelles d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/sales/sum/year/{restoId}": {
+      "get": {
+        "tags": [
+          "Restaurant statistics"
+        ],
+        "description": "Permet d'obtenir le total des ventes annuelles d'un restaurant",
+        "parameters": [
+          {
+            "name": "restoId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/statistics/system/informations": {
+      "get": {
+        "tags": [
+          "Server statistics"
+        ],
+        "description": "Permet d'obtenir de nombreuses statistiques à propos des serveurs et du processus",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },"/notifications/id/{notificationID}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Permet d'obtenir une notification avec son identifiant et de mettre à jour son état",
+        "parameters": [
+          {
+            "name": "notificationID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/notifications/": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère toutes les notifications",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/notifications/latest/{NLatest}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère les X dernières notifications",
+        "parameters": [
+          {
+            "name": "NLatest",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/notifications/unread/{markAsRead?}": {
+      "get": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Récupère l'ensemble des notifications non lues",
+        "parameters": [
+          {
+            "name": "markAsRead?",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/notifications/markAsRead": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Change l'état de toutes les notifications d'un utilisateur",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/notifications/create": {
+      "post": {
+        "tags": [
+          "Notifications"
+        ],
+        "description": "Permet de créer une nouvelle notification",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "example": "any"
+                },
+                "user_id": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/accounts/users": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de récupérer la liste de l'ensemble des utilisateurs",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/accounts/logs": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de récupérer les logs au format UTF-8",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/accounts/{userId}": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de récupérer un utilisateur spécifique",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de bannir un utilisateur",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/accounts/current/user": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de récupérer l'utilisateur actuel à partir de son JWT",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/accounts/perm/{userId}": {
+      "delete": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de supprimer un utilisateur",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/accounts/": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de créer un utilisateur",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet d'éditer un utilisateur",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/accounts/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de se connecter",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "mail": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/accounts/token/verification": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de vérifier la validité d'un JWT",
+        "parameters": [
+          {
+            "name": "slice(7",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "length",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        }
+      }
+    },
+    "/accounts/logout/{id}": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de déconnecter un utilisateur",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/accounts/referral/code": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "description": "Permet de récupérer un code de parrainage",
+        "parameters": [
+          {
+            "name": "slice(7",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "length",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "x-access-token",
+            "in": "header",
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  }
+}

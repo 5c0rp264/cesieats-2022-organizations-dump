@@ -1,0 +1,224 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "CESI EATS - Orders API",
+    "description": "Cette documentation explique les différents endpoints contenu dans le service dédié à la gestion des commandes de CESI EATS"
+  },
+  "host": "localhost:8090",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Orders",
+      "description": "Endpoints"
+    }
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "securityDefinitions": {
+    "JWT": {
+      "type": "apiKey",
+      "name": "jwt",
+      "in": "cookies"
+    }
+  },
+  "paths": {
+    "/orders/": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes",
+        "parameters": [],
+        "responses": {}
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/orders/history": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de créer une commande",
+        "parameters": [],
+        "responses": {}
+      }
+    },
+    "/orders/{orderID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "En fonction du rôle de l'utilisateur cet endpoint permet d'obtenir l'historique des commandes d'un restaurant, d'un utilisateur...",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      },
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de supprimer une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/{orderID}/restaurants/{restaurantID}/validate": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un restaurant de valider une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/restaurants/current/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes à traiter / suivre pour le restaurant",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/restaurants/{restaurantID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet de récupérer l'ensemble des commandes pour un restaurant spécifique",
+        "parameters": [
+          {
+            "name": "restaurantID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/clients/{clientID}": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un client de récupérer l'ensemble de ses commandes",
+        "parameters": [
+          {
+            "name": "clientID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/{orderID}/deliverers/{delivererID}/accept": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un livreur d'accepter une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "delivererID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/orders/{orderID}/deliverers/{delivererID}/refuse": {
+      "put": {
+        "tags": [
+          "Orders"
+        ],
+        "description": "Permet à un livreur de refuser une commande",
+        "parameters": [
+          {
+            "name": "orderID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "delivererID",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {}
+      }
+    }
+  }
+}

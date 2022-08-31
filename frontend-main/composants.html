@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Composants</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Centre de gestion des composants</h1>
+                    <p class="mb-4">Cette interface regroupe l'ensemble des composants qui peuvent être téléchargés, il est aussi possible d'en upload de nouveaux</p>
+
+                    <div class="d-flex align-items-center justify-content-around m-3">
+                        <input type="file" class="d-none" id="upload-input-component" accept=".html" onchange="submitNewComponent(this)">
+                        <button type="button" class="btn btn-primary mt-2" id="upload-component" onclick="$('#upload-input-component').click()">Ajouter un composant</button>
+                        <button type="button" class="btn btn-primary mt-2" id="display-logs-component" onclick="$('#components-logs').toggle()">Visualiser les logs des téléchargements et des uploads</button>
+                    </div>
+
+                    <div class="card bg-danger text-white shadow m-3 d-none" id="upload-error">
+                        <div class="card-body">
+                            Erreur d'upload
+                            <div class="text-white-50 small">Impossible de charger votre composant, veuillez réessayer</div>
+                        </div>
+                    </div>
+                    
+                    <div class="card bg-success text-white shadow m-3 d-none" id="upload-success">
+                        <div class="card-body">
+                            Succès d'upload
+                            <div class="text-white-50 small">Votre composant vient d'être ajouté, votre page va s'actualiser dans quelques instants, sinon <a href="/composants" class="text-light">cliquez-ici</a> !</div>
+                        </div>
+                    </div>
+
+                    <div id="components-logs" style="display:none"></div>
+                    <div id="download-components"></div>
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <div class="modal fade" id="componentDownloadModal" tabindex="-1" role="dialog" aria-labelledby="componentDownloadModalLabel"
+aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="componentDownloadModalLabel">Code du composant demandé</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body w-100">
+                <textarea id="current-component-content" class="w-100" style="height:400px;"></textarea>
+                <div class="text-center"><button type="button" class="btn btn-primary mt-2" id="update-current-component" onclick="updateComponent(this)">Enregistrer les modifications</button></div>
+                <div class="text-center"><button type="button" class="btn btn-primary mt-2" id="download-current-component" onclick="downloadComponent(this)">Télécharger</button></div>
+            </div>
+
+            <div class="card bg-success text-white shadow m-3 d-none" id="edit-success">
+                <div class="card-body">
+                    Modification avec succès
+                    <div class="text-white-50 small">Votre composant à bien été modifié !</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+            fetchDirData();
+            fetchLogsData();
+        });
+
+        async function fetchDirData(){
+            document.getElementById('download-components').innerHTML = "";
+            let data = [];
+
+            await fetch('/components/list')
+            .then(res => res.json()) // or res.json()
+            .then(res => data = res);
+
+            data.forEach((name)=>{
+                if (name.length > 0){
+                    document.getElementById('download-components').innerHTML += ''+
+                    '<div class="col-xl-3 col-md-6 mb-4 d-inline-block">'+
+                        '<div class="card border-left-primary shadow h-100 py-2">'+
+                            '<div class="card-body">'+
+                                '<div class="row no-gutters align-items-center">'+
+                                    '<div class="col mr-2">'+
+                                        '<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">'+
+                                            'Composant <a onclick="$(this).parent().parent().parent().parent().parent().parent().remove();" class="text-danger hoverable" style="text-decoration:none;">X</a></div>'+
+                                        '<div class="h5 mb-0 font-weight-bold text-gray-800">'+name+'</div>'+
+                                    '</div>'+
+                                    '<div class="col-auto">'+
+                                        '<i title="Visualiser le composant" class="fas fa-download fa-2x text-gray-300 hoverable" onclick="displayComponent(\''+name+'\')"></i>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>';
+                }
+            })
+        }
+
+        function displayComponent(name){
+            $.get("components/"+name+".html", function(content)
+            {
+                $("#current-component-content")[0].innerHTML = content;
+                $("#download-current-component")[0].dataset.name = name;
+                $("#update-current-component")[0].dataset.name = name;
+                $("#componentDownloadModal").modal('show');
+            },'html');    // this is the change now its working
+        }
+
+        function downloadComponent(el){
+            window.open("components/download/"+el.dataset.name);
+        }
+
+        
+
+        async function fetchLogsData(){
+            document.getElementById('components-logs').innerHTML = "";
+            let data = [];
+
+            await fetch('/components/logs')
+            .then(res => res.text()) // or res.json()
+            .then(res => data = res);
+
+            data.split('\n').forEach((line)=>{
+                if (line.length > 0){
+                    let color = "success";
+                    if (line.indexOf("Tentative") > -1) color = "danger"
+
+                    document.getElementById('components-logs').innerHTML += ''+
+                    '<div class="card mb-4 py-3 border-left-'+color+'">'+
+                        '<div class="card-body">'+
+                            line
+                        '</div>'+
+                    '</div>';
+                }
+            })
+        }
+
+        function updateComponent(el){
+            let newName = el.dataset.name;
+            let newContent = $("#current-component-content").val();
+
+            let formData = {
+                    name : newName+".html",
+                    content : encodeURI(newContent)
+                }
+
+            fetch("/components/upload",
+            {
+                body: JSON.stringify(formData),
+                method: "POST",
+                headers: {'Content-Type': 'application/json'}
+            }).then(function(response) {
+                if (response.status >= 200 && response.status < 300){
+                    $("#upload-error").addClass("d-none");
+                    $("#edit-success").removeClass("d-none");
+                    window.setInterval(()=>location.reload(),1000);
+                }else{
+                    $("#upload-error").removeClass("d-none");
+                    window.setInterval(()=>$("#upload-error").addClass("d-none"),3000);
+                }
+            });
+        }
+
+        function submitNewComponent(el){
+            let file = el.files[0];
+
+            let reader = new FileReader();
+            reader.readAsText(file, "UTF-8");
+            reader.onload = function (evt) {
+                let fileContent = evt.target.result;
+                let formData = {
+                    name : file.name,
+                    content : encodeURI(fileContent)
+                }
+
+                fetch("/components/upload",
+                {
+                    body: JSON.stringify(formData),
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'}
+                }).then(function(response) {
+                    if (response.status >= 200 && response.status < 300){
+                        $("#upload-error").addClass("d-none");
+                        $("#upload-success").removeClass("d-none");
+                        window.setInterval(()=>location.reload(),3000);
+                    }else{
+                        $("#upload-error").removeClass("d-none");
+                        window.setInterval(()=>$("#upload-error").addClass("d-none"),3000);
+                    }
+                });
+            }
+            reader.onerror = function (evt) {
+                document.getElementById("fileContents").innerHTML = "error reading file";
+            }
+        }
+    </script>
+
+    <style>
+        .hoverable{
+            cursor:pointer;
+        }
+    </style>
+</body>
+
+</html>

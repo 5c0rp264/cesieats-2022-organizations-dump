@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Choix de la commande</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <h1 class="h3 mb-2 text-gray-800">Gestion de vos livraisons</h1>
+                    <p class="mb-4">Cette interface regroupe l'ensemble des livraisons possible à réaliser.</p>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary"></h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="current-delivery" class="d-none">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==3}">Aller chercher à :</th>
+                                            <th v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==4}">Livrer à :</th>
+                                            <th>Action :</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="align-middle text-center" v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==3}">
+                                                {{ order.restaurant.name  }}
+                                            </td>
+                                            <td class="align-middle text-center" v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==4}">
+                                                {{ order.client.name  }}
+                                                <br>
+                                                {{ order.client.address  }}
+                                            </td>
+                                            <td :id="`delivered-${order._id}`" class="align-middle text-center">
+                                                <button v-bind:class="{'disabled': order.status.length==3}" :disabled="order.status.length==3" class="btn btn-success" :onclick="`markAsDelivered('${order._id}')`">Acquiter la livraison ✔️</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="align-middle text-center" v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==3}">
+                                                <i v-if="order.status.length==3" class="fa-solid fa-arrow-up"></i>
+                                            </td>
+                                            <td class="align-middle text-center" v-bind:class="{'font-weight-bold bg-info text-white': order.status.length==4}">
+                                                <i v-if="order.status.length==4" class="fa-solid fa-arrow-up"></i>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="to-treat-table">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date/Heure</th>
+                                            <th>Restaurant</th>
+                                            <th>Adresse de livraison</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-if="orders.length == 0">
+                                            <td class="align-middle text-center" colspan="4">Aucune commande à livrer.
+                                                <br>
+                                                Vous êtes un livreur libre !
+                                                <br>
+                                                <iframe src="https://giphy.com/embed/3o7bugWY17B7iXPEGs" width="480" height="270" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+                                            </td>
+                                        </tr>
+                                        <tr v-for="(order, index) in orders">
+                                            <td class="align-middle text-center">{{ order.timestamp  }}</td> 
+                                            <td class="align-middle text-center">{{ order.restaurant.name  }}</td>
+                                            <td class="align-middle text-center">{{ order.client.address  }}</td>
+                                            <td :id="`validate-${order._id}`" class="align-middle text-center">
+                                                <button class="btn btn-success" :onclick="`acceptOrder('${order._id}', ${index})`">Je prends ✔️</button>
+                                                <br>
+                                                <button class="btn btn-danger" onclick='$(this).closest("tr").addClass("d-none");'>Je refuse 😠</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <script>
+                                function parseJwt(token){
+                                    return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+                                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+                                }
+
+                                function getJWTData(){
+                                    return parseJwt(Cookies.get('jwt'));
+                                }
+
+                                function markAsDelivered(orderID){
+                                    $.ajax({
+                                        type: "PUT",
+                                        dataType: "json",
+                                        url: '/orders/orders/delivered/'+orderID,
+                                    }).then((response) => {
+                                        reloadPageData();
+                                    });
+                                }
+
+                                function acceptOrder(orderID, index){
+
+                                    $.getJSON('/accounts/'+getJWTData().uid).then(function (response) {
+                                        //console.log(response[0]);
+                                        response = response[0];
+                                        $.ajax({
+                                            type: "PUT",
+                                            dataType: "json",
+                                            url: '/orders/orders/'+orderID+'/deliverers/accept',
+                                            data: response,
+                                        }).then((response) => {
+                                            reloadPageData();
+                                        });
+                                    });
+                                    
+                                }
+
+
+
+                                let vueCurrentDeliveringOrder;
+                                let vueOrdersToSelect;
+                                function reloadPageData(){
+                                    $.getJSON('/orders/orders/current-delivery/').then(function (response) {
+                                        
+
+                                        console.log(response);
+                                        response = response.order;
+                                        // if the deliverer has to deliver an order, show him the way
+                                        if (response !== undefined && response !== null){
+                                            console.log("ordertrack");
+                                            console.log(response);
+                                            $("#to-treat-table").addClass("d-none");
+                                            $("#current-delivery").removeClass("d-none");
+                                            console.log(response);
+                                            console.log(response);
+                                            if (vueCurrentDeliveringOrder == undefined ){
+                                                vueCurrentDeliveringOrder = new Vue({
+                                                    el: '#current-delivery',
+                                                    data: {
+                                                        order: response,
+                                                    }
+                                                });
+                                            }else{
+                                                vueCurrentDeliveringOrder.order = response
+                                            }
+                                            
+                                        }else{
+                                            //otherwise, make him accept one
+                                            $("#to-treat-table").removeClass("d-none");
+                                            $("#current-delivery").addClass("d-none");
+                                            $.getJSON('/orders/orders/deliverers/').then(function (response) {
+                                                response = response.order;
+                                                console.log("pickorder");
+                                                console.log(response);
+                                                
+                                                for (let i = 0; i < response.length; i++) {
+                                                    const dateOrder = new Date(response[i].timestamp);
+                                                    let hours = dateOrder.getHours();
+                                                    let mins = dateOrder.getMinutes();
+                                                    if (hours   < 10) {hours   = "0"+hours;}
+                                                    if (mins   < 10) {mins   = "0"+mins;}
+                                                    response[i].timestamp = dateOrder.getDate()+"/"+(dateOrder.getMonth()+1)+"/"+dateOrder.getFullYear()+" "+hours+":"+mins;
+
+                                                    response[i].price =  response[i].price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                                }
+                                                if (vueOrdersToSelect == undefined ){
+                                                    vueOrdersToSelect = new Vue({
+                                                        el: '#to-treat-table',
+                                                        data: {
+                                                            orders: response,
+                                                        }
+                                                    });
+                                                }else{
+                                                    vueOrdersToSelect.orders = response
+                                                }
+                                                
+                                            });
+                                        }
+                                    });
+                                    
+                                }
+
+
+                                let restoID ="";
+                                $( document ).ready(function() {
+                                    reloadPageData();
+                                    window.setInterval(function(){
+                                        reloadPageData();
+                                    }, 4000);
+                                });
+                                
+                            </script>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "website",
+  "version": "1.0.0",
+  "description": "[SB Admin 2](https://startbootstrap.com/theme/sb-admin-2/) is an open source admin dashboard theme for [Bootstrap](https://getbootstrap.com/) created by [Start Bootstrap](https://startbootstrap.com/).",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "start-gendoc": "node swagger.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "body-parser": "^1.20.0",
+    "cookie-notice": "^1.3.9",
+    "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "nodemon": "^2.0.16",
+    "swagger-autogen": "^2.21.4",
+    "swagger-ui-express": "^4.4.0",
+    "vue": "^2.6.14"
+  },
+  "nodemonConfig": {
+    "ext": "js,html"
+  }
+}

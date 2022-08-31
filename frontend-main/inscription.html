@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Inscription</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<style>
+    .register-image {
+        background: url('/img/logo-cesi-eats.png') no-repeat center;
+        background-color: #f4f4f4;
+    }
+</style>
+
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <div class="card o-hidden border-0 shadow-lg my-5">
+        <div class="card-body p-0">
+            <!-- Nested Row within Card Body -->
+            <div class="row">
+                <div class="col-lg-5 d-none d-lg-block register-image"></div>
+                <div class="col-lg-7">
+                    <div class="p-5">
+                        <div class="text-center">
+                            <h1 class="h4 text-gray-900 mb-4">Créer votre compte !</h1>
+                        </div>
+                        <form class="user" id="signupForm">
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" id="firstName"
+                                           placeholder="Nom*" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control form-control-user" id="lastName"
+                                           placeholder="Prénom*" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" class="form-control form-control-user" id="inputEmail"
+                                       placeholder="Adresse mail*" required>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user" id="inputPseudonyme"
+                                           placeholder="Pseudonyme*" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="phone" class="form-control form-control-user"
+                                           id="inputPhone" placeholder="Numéro de téléphone*" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control form-control-user" id="exampleInputAddress"
+                                       placeholder="Adresse postale*" required>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="password" class="form-control form-control-user"
+                                           id="inputPassword" placeholder="Mot de passe*" required>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input type="password" class="form-control form-control-user"
+                                           id="repeatPassword" placeholder="Confirmation du mot de passe*" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-6 mb-3 mb-sm-0">
+                                    <input type="text" class="form-control form-control-user"
+                                           id="inputReferralCode" placeholder=" Code de parrainage">
+                                </div>
+                                <div class="col-sm-6">
+                                    <select id="roleSelect"
+                                            class="custom-select custom-select-sm form-control form-control-sm">
+                                        <option selected value="client">Client</option>
+                                        <option value="deliverer">Livreur</option>
+                                        <option value="restaurant">Restaurateur</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="small mt-2 mb-2">
+                                La création d'un compte sur la plateforme Cesi Eats entraîne la collecte
+                                et le traitement de
+                                données à caractère personnel. La base légale du traitement est l'exécution du contrat.
+                                <br> Pour en savoir plus sur la gestion de vos données personnelles et pour exercer vos
+                                droits,
+                                <a class="" data-toggle="collapse" href="#collapse-gdpr" role="button"
+                                   aria-expanded="false" aria-controls="collapse-gdpr">
+                                    cliquez ici.</a>
+                                <div class="collapse" id="collapse-gdpr">
+                                    <div class="small text-justify">
+                                        Les informations recueillies dans ce formulaire sont enregistrées dans un
+                                        fichier informatisé par Cesi Eats. La base légale du traitement
+                                        est l'exécution du contrat.
+                                        Les données marquées par un astérisque dans le questionnaire doivent
+                                        obligatoirement être fournies. Les données
+                                        collectées sont conservées cinq ans à partir de la date de dernière
+                                        modification. Vous pouvez accéder aux données
+                                        vous concernant, les rectifier, demander leur effacement ou exercer votre droit
+                                        à la limitation du traitement de
+                                        vos données en envoyant un mail à <a
+                                            href="mailto:rgpd@cesi-eats.fr">rgpd@cesi-eats.fr</a>.
+                                        Consultez le site
+                                        <a href="https://www.cnil.fr/fr" target="_blank">cnil.fr</a> pour plus
+                                        d'informations
+                                        sur vos droits. Si vous estimez, après nous avoir contactés, que vos droits
+                                        "Informatiques et Libertés" ne sont pas respectés,
+                                        vous pouvez adresser une réclamation à la CNIL.
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="javascript:register()" class="btn btn-primary btn-user btn-block">
+                                S'inscrire
+                            </a>
+
+
+                            <div class="card bg-danger text-white shadow mt-3 d-none" id="password-repeat-error">
+                                <div class="card-body">
+                                    Erreur d'inscription
+                                    <div class="text-white-50 small">Les mots de passes ne sont pas similaires</div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-danger text-white shadow mt-3 d-none" id="form-invalid">
+                                <div class="card-body">
+                                    Erreur de votre part
+                                    <div class="text-white-50 small">LE FORMULAIRE N'EST PAS VALIDE ! A VOUS DE TROUVER LES CHAMPS A CHANGER ! </div>
+                                </div>
+                            </div>
+                            
+                            <div class="card bg-danger text-white shadow mt-3 d-none" id="create-account-error">
+                                <div class="card-body">
+                                    Erreur d'inscription
+                                    <div class="text-white-50 small">Impossible de vous inscrire, veuillez réessayer
+                                        plus tard
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-danger text-white shadow mt-3 d-none" id="account-referrer-error">
+                                <div class="card-body">
+                                    Erreur de parrainage
+                                    <div class="text-white-50 small">Le code de parrainage utilisé n'est pas référencé
+                                        dans notre base de données
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-danger text-white shadow mt-3 d-none" id="mail-duplicate-error">
+                                <div class="card-body">
+                                    Erreur d'inscription
+                                    <div class="text-white-50 small">Ce mail est déjà utilisé</div>
+                                </div>
+                            </div>
+
+                            <div class="card bg-success text-white shadow mt-3 d-none" id="account-success-creation">
+                                <div class="card-body">
+                                    Création de votre compte avec succès
+                                    <div class="text-white-50 small">Votre compte a bien été créé vous allez être
+                                        redirigé vers la page de connexion dans les prochaines secondes si rien ne se
+                                        passe <a href="connexion.html">cliquez-ici !</a></div>
+                                </div>
+                            </div>
+                        </form>
+                        <hr>
+                        <div class="text-center">
+                            <a class="small" href="connexion.html">Vous avez déjà un compte ? Connectez-vous !</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="js/sb-admin-2.min.js"></script>
+
+<script>
+    function register() {
+        if ($("#inputPassword").val() !== $("#repeatPassword").val()) {
+            $("#password-repeat-error").removeClass("d-none");
+            window.setInterval(() => $("#password-repeat-error").addClass("d-none"), 3000);
+        } else {
+            let formData = {
+                name: $("#firstName").val(),
+                lastname: $("#lastName").val(),
+                pseudo: $("#inputPseudonyme").val(),
+                role: $("#roleSelect").val(),
+                mail: $("#inputEmail").val(),
+                phone: $("#inputPhone").val(),
+                address: $("#exampleInputAddress").val(),
+                password: $("#inputPassword").val(),
+                gdprApproved: true,
+                referral: $("#inputReferralCode").val()
+            };
+                if ($("#signupForm")[0].checkValidity()){
+                    fetch("/accounts/",
+                        {
+                            body: JSON.stringify(formData),
+                            method: "POST",
+                            headers: {'Content-Type': 'application/json'}
+                        }).then(async function (response) {
+                        if (response.status >= 200 && response.status < 300) {
+                            // Login page redirection
+                            $("#account-success-creation").removeClass("d-none");
+                            window.setInterval(() => location.replace('/connexion.html'), 3000);
+                        } else {
+                            if (response.status === 417) {
+                                $("#account-referrer-error").removeClass("d-none");
+                                window.setInterval(() => $("#account-referrer-error").addClass("d-none"), 3000);
+                            } else if (response.status === 451) {
+                                $("#mail-duplicate-error").removeClass("d-none");
+                                window.setInterval(() => $("#mail-duplicate-error").addClass("d-none"), 3000);
+                            }
+                        }
+                    });
+                }else{
+                    $("#form-invalid").removeClass("d-none");
+                }
+        }
+    }
+</script>
+</body>
+
+</html>

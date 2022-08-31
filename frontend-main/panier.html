@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Voir mon panier</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/lodash/4.13.1/lodash.min.js"></script>
+
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Mon panier</h1>
+                    </div>
+
+
+                    <div class="row" id="panier">
+
+
+                        <table class="table table-striped table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Quantité</th>
+                                    <th>Image</th>
+                                    <th>Intitulé</th>
+                                    <th>Prix unitaire</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_menus">
+                                <tr>
+                                    <td class="h4 text-left" colspan="4">Menus</td>
+                                </tr>
+                                <tr v-for="element in cart_element_data_menu">
+                                    <td class="align-middle">
+                                        <button type="button" class="btn btn-outline-secondary rounded" :onClick="`removeFrom('${element.menu._id}', 'cart-menu')`">-</button>
+                                        {{element.menu.count}}
+                                        <button type="button" class="btn btn-outline-secondary rounded" :onClick="`addTo('${element.menu._id}', 'cart-menu')`">+</button>
+                                    </td>
+                                    <td class="align-middle"><img height="150" :src='element.menu.image' v-if='element.menu.image' class="rounded"></td>
+                                    <td class="align-middle">{{element.menu.name}}</td>
+                                    <td class="align-middle">{{element.menu.price}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody id="table_articles">
+                                <tr>
+                                    <td class="h4 text-left" colspan="4">Articles</td>
+                                </tr>
+                                <tr v-for="element in cart_element_data_article">
+                                    <td class="align-middle">
+                                        <button type="button" class="btn btn-outline-secondary rounded" :onClick="`removeFrom('${element.article._id}', 'cart-article')`">-</button>
+                                        {{element.article.count}}
+                                        <button type="button" class="btn btn-outline-secondary rounded" :onClick="`addTo('${element.article._id}', 'cart-article')`">+</button>
+                                    <td class="align-middle"><img height="150" :src='element.article.image' v-if='element.article.image' class="rounded"></td>
+                                    <td class="align-middle">{{element.article.name}}</td>
+                                    <td class="align-middle">{{element.article.price}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td>
+                                        <b>Code promo :</b>
+                                    </td>
+                                    <td>
+                                        <input type="text" id="codePromo" onChange="loadDataSafely()">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"></td>
+                                    <td>
+                                        <b>Total :</b>
+                                    </td>
+                                    <td>
+                                        <b id="totalValue"></b>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="w-100">
+                            <button class="btn btn-success float-right btn-lg" id="make-order-button" onclick="makeOrder()">
+                                J'ordonne une livraison en <br> contrepartie de ma money ! 
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                        
+                    </div>
+
+                    <script>
+
+                        function removeFrom(elementToRemove, cookieName){
+                            let data = JSON.parse(Cookies.get(cookieName));
+                            data.splice(data.indexOf(elementToRemove),1);
+                            Cookies.set(cookieName, JSON.stringify(data));
+                            loadDataSafely();
+                        }
+
+                        function addTo(elementToAdd, cookieName){
+                            let data = JSON.parse(Cookies.get(cookieName));
+                            data.push(elementToAdd);
+                            Cookies.set(cookieName, JSON.stringify(data));
+                            loadDataSafely();
+                        }
+
+                        function parseJwt(token){
+                            return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+                                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                            }).join('')));
+                        }
+
+                        function getJWTData(){
+                            return parseJwt(Cookies.get('jwt'));
+                        }
+                        okToShowTotal = false;
+
+                        function makeOrder(){
+                            let menus = JSON.parse(JSON.stringify(orderedMenus));
+                            let articles = JSON.parse(JSON.stringify(orderedArticles));
+                            menus.forEach(function(element, index) {
+                                menus[index] = element.menu;
+                                menus[index].image = "";
+                                element.menu.price.slice(0, -1);
+                                menus[index].price = parseFloat(element.menu.price);
+                            });
+                            articles.forEach(function(element, index) {
+                                articles[index] = element.article;
+                                articles[index].image = "";
+                                element.article.price.slice(0, -1);
+                                articles[index].price = parseFloat(element.article.price);
+                            });
+                            const curRestoID = Cookies.get('cur-restoID');
+                            $.getJSON('/shop/restaurants/'+curRestoID).then(function (response) {
+                                const restaurant = response.restaurant;
+                                $.getJSON('/accounts/'+getJWTData().uid).then(function (response) {
+                                    response[0]["_id"] = response[0]["id"];
+                                    const user = response[0];
+                                    $.post( "/orders/orders", {
+                                        client: JSON.stringify(user),
+                                        restaurant: JSON.stringify(restaurant),
+                                        price: (totalPriceArticle+totalPriceMenu),
+                                        menus: JSON.stringify(menus),
+                                        articles: JSON.stringify(articles),
+                                    }).done(function( data ) {
+                                        const orderID = data.order._id;
+                                        if (orderID !== undefined && orderID !== null &&  orderID.length > 0){
+                                            Cookies.remove('cur-restoID');
+                                            Cookies.remove('cart-article');
+                                            Cookies.remove('cart-menu');
+                                            location.href = '/paiement.html?orderID='+orderID;
+                                        }
+                                    });
+                                });
+                            });
+
+                            /**/
+                        }
+
+                        $( document ).ready(function() {
+                            loadDataSafely();
+                        });
+
+
+                        function loadDataSafely(){
+                            totalPriceArticle = 0;
+                            totalPriceMenu = 0;
+                            okToShowTotal = false;
+                            $("#totalValue").html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+                            const cartDataArticle = Cookies.get('cart-article');
+                            const cartDataMenu = Cookies.get('cart-menu');
+                            if ((cartDataArticle !== undefined && cartDataArticle !== null &&  JSON.parse(cartDataArticle).length > 0) || (cartDataMenu !== undefined && cartDataMenu !== null &&  JSON.parse(cartDataMenu).length > 0)){
+                                getMenuData();
+                                getArticlesData();
+                            }else {
+                                $("#table_menus").html('<td class="h4 text-center" colspan="4">Votre panier est vide.<br> IL FAUT MANGER !<br><iframe src="https://giphy.com/embed/in4t9IzuZKhqg" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe></td>');
+                                $("#table_articles").html('');
+                                $("#make-order-button"). prop('disabled', true);
+                                $("#make-order-button").addClass("disabled");
+                            }
+                        }
+
+
+                        function removeItem(array, item) {
+                            var i = array.length;
+
+                            while (i--) {
+                                if (array[i] === item) {
+                                    array.splice(array.indexOf(item), 1);
+                                }
+                            }
+                        }
+
+
+                        function groupSimilar(arr) {
+                            return arr.reduce((acc, val) => {
+                                const { data, map } = acc;
+                                const ind = map.get(val);
+                                if(map.has(val)){
+                                    data[ind][1]++;
+                                } else {
+                                    map.set(val, data.push([val, 1])-1);
+                                }
+                                return { data, map };
+                            }, {
+                                data: [],
+                                map: new Map()
+                            }).data;
+                        };
+
+                        let totalPriceArticle = 0;
+                        let orderedArticles = [];
+                        let vueArticle;
+                        function getArticlesData(){
+                            let cartData = []
+                            const cookie = Cookies.get('cart-article');
+                            if (cookie !== undefined && cookie !== null){
+                                cartData = JSON.parse(cookie);
+                            }
+                            const cartDataGrouped = groupSimilar(cartData);
+                            let requests = [];
+                            cartDataGrouped.forEach(element => {
+                                requests.push($.getJSON('/shop/articles/' + element[0]));
+                            });
+                            Promise.all(requests).then(results => {
+                                results.forEach(function(element, index) {
+                                    if (element.article !== undefined && element.article !== null){
+                                        element = element.article;
+                                        totalPriceArticle += element.price * cartDataGrouped[index][1];
+                                        element.price =  element.price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                        element.count =  cartDataGrouped[index][1];
+                                    }else {
+                                        removeItem(cartData, cartDataGrouped[index][0]);
+                                    }
+                                });
+                                Cookies.set('cart-article', JSON.stringify(cartData));
+                                orderedArticles = results;
+                                if (vueArticle !== undefined && vueArticle !== null){
+                                    vueArticle.cart_element_data_article = orderedArticles;
+                                }else{
+                                    vueArticle = new Vue({
+                                        el: '#table_articles',
+                                        data: {
+                                            cart_element_data_article: orderedArticles,
+                                        }
+                                    });
+                                }
+                                if (okToShowTotal){
+                                    $("#totalValue").text((totalPriceArticle+totalPriceMenu).toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €");
+                                    if ($("#codePromo").val() !== ""){
+                                        $("#totalValue").append("<br><small class='text-danger'> - 10.00 €</small>")
+                                    }
+                                }else{
+                                    okToShowTotal = true;
+                                }
+                                
+                            })
+                        }
+
+                        let totalPriceMenu = 0;
+                        let orderedMenus = [];
+                        let vueMenu;
+                        function getMenuData(){
+                            let cartData = []
+                            const cookie = Cookies.get('cart-menu');
+                            if (cookie !== undefined && cookie !== null){
+                                cartData = JSON.parse(cookie);
+                            }
+                            const cartDataGrouped = groupSimilar(cartData);
+                            let requests = [];
+                            cartDataGrouped.forEach(element => {
+                                requests.push($.getJSON('/shop/menus/' + element[0]));
+                            });
+                            Promise.all(requests).then(results => {
+                                results.forEach(function(element, index) {
+                                    console.log(element)
+                                    if (element.menu !== undefined && element.menu !== null){
+                                        element = element.menu;
+                                        totalPriceMenu += element.price * cartDataGrouped[index][1];
+                                        element.price =  element.price.toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €";
+                                        element.count =  cartDataGrouped[index][1];
+                                    }else {
+                                        removeItem(cartData, cartDataGrouped[index][0]);
+                                    }
+                                });
+                                Cookies.set('cart-menu', JSON.stringify(cartData));
+                                orderedMenus = results;
+                                if (vueMenu !== undefined && vueMenu !== null){
+                                    vueMenu.cart_element_data_menu = orderedMenus;
+                                }else{
+                                    vueMenu = new Vue({
+                                        el: '#table_menus',
+                                        data: {
+                                            cart_element_data_menu: orderedMenus,
+                                        }
+                                    });
+                                }
+                                if (okToShowTotal){
+                                    $("#totalValue").text((totalPriceArticle+totalPriceMenu).toFixed(2).replace(/(\d)(?=(\d{3})+(?:\.\d+)?$)/g, "$1,") + " €");
+                                    if ($("#codePromo").val() !== ""){
+                                        $("#totalValue").append("<br><small class='text-danger'> - 10.00 €</small>")
+                                    }
+                                }else{
+                                    okToShowTotal = true;
+                                }
+                            })
+                        }
+
+
+
+                    </script>
+
+                    
+
+                    
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

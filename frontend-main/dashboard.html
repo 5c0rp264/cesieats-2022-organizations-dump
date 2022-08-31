@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Connexion</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/google-palette/1.1.0/palette.js" integrity="sha512-C8lBe+d5Peg8kU+0fyU+JfoDIf0kP1rQBuPwRSBNHqqvqaPu+rkjlY0zPPAqdJOLSFlVI+Wku32S7La7eFhvlA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+
+    <title>CESI EATS</title>
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <div id="topbar"></div>
+                <!-- Topbar -->
+                
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Tableau de bord</h1>
+                        <a href="/historique-commandes" id="historique-commandes" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                            <i class="fas fa-download fa-sm text-white-50"></i> 
+                            Historique de commandes
+                        </a>
+                    </div>
+                    <div class="d-none align-items-center justify-content-between mb-4" id="selector-for-commercial-wrapper">
+                        <select class="selectpicker">
+                            <option>Hi</option>
+                            <option>H4ck3rs</option>
+                        </select>
+                    </div>
+                      
+
+                    <!-- Content Row -->
+                    <div class="row" id="dashboard-content-short">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div id="stat-sales-int"></div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div id="stat-component-daily-sales-count"></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Content Row -->
+
+                    <div class="row" id="dashboard-content">
+                        <div class="col-lg-4">
+                            <div id="stat-sales-plot"></div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div id="stat-component-article-type"></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div id="stat-component-daily-income"></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="stat-component-daily-average"></div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div id="stat-component-daily-count"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        function parseJwt(token){
+        return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+        }
+
+        function getJWTData(){
+            return parseJwt(Cookies.get('jwt'));
+        }
+        function redirectForRoles(){
+            if (getJWTData().role == "deliverer"){
+                window.location.href = '/livreur-choix-commande';
+            }else if (getJWTData().role == "user") {
+                window.location.href = '/restaurants';
+            }else if (getJWTData().role == "tech") {
+                window.location.href = '/statistiques-serveur';
+            }else if (getJWTData().role == "dev") {
+                window.location.href = '/composants';
+            }else if (getJWTData().role == "restaurant"){
+                $("#historique-commandes").removeClass('d-none');
+            }
+        }
+
+
+        $(function(){
+            redirectForRoles()
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+
+
+            //to be added when you use stat components
+            $("body").append("<div id='stat_utils_loader'></div>");
+            $("#stat_utils_loader").load("components/stat_utils.html", function() {
+                utils_ready();
+                if (getJWTData().role != "commercial"){
+                    $("#stat-component-article-type").load("components/stat_article.html");
+                    $("#stat-sales-int").load("components/stat_monthly_income_int.html");
+                    $("#stat-sales-plot").load("components/stat_monthly_income_plot.html");
+                    $("#stat-component-daily-income").load("components/stat_daily_income_plot.html");
+                    $("#stat-component-daily-average").load("components/stat_daily_sales_average_plot.html");
+                    $("#stat-component-daily-count").load("components/stat_daily_sales_count_plot.html");
+                    $("#stat-component-daily-sales-count").load("components/stat_daily_sales_count_int.html");
+                }
+            });
+
+
+
+            
+
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

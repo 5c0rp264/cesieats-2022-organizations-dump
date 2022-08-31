@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Liste des restaurants</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script src="/js/bootstrap-show-notification.js"></script>
+
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar"></div>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <div id="topbar"></div>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid" id="content-container">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h3 class="mb-0 text-gray-800">Choisissez votre restaurant</h3>
+                    </div>
+
+
+                    <div class="row justify-content-around" id="openned-resto">
+
+                        <!-- Default Card Example -->
+                        <div class="card o-hidden border-0 shadow-lg col-sm-5 col-xl-3 offset-xl-1 mb-3 px-0" v-for="resto in restaurants">
+                            <a :href="`commande-restaurant.html?restoID=${resto._id}`" class="text-decoration-none">
+                                <div class="w-100">
+                                    <div v-if="resto.image" class="mb-2 w-100">
+                                        <img class="rounded" :src="resto.image" width="100%" v-if="resto.image" />
+                                    </div>
+                                    <div class="p-2">
+                                        <b>{{ resto.name }}</b>
+                                        <br>
+                                        <small style="text-transform: uppercase; color: grey;"><b>{{ resto.category }}</b></small>
+                                    </div>
+                                </div>
+                                <div class="card-body" style="color: grey;">
+                                    {{ resto.description }}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+
+
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h3 class="mb-0 text-gray-800">Restaurants indisponibles</h3>
+                    </div>
+
+
+                    <div class="row justify-content-around" id="closed-resto">
+                        <!-- Default Card Example -->
+                        <div class="card col-sm-5 col-xl-3 offset-xl-1 mb-3 px-0" v-for="resto in restaurants">
+                            <div class="w-100">
+                                <div v-if="resto.image" class="mb-2 w-100">
+                                    <img class="rounded" :src="resto.image" width="100%" v-if="resto.image" />
+                                </div>
+                                <div class="p-2">
+                                    <b>{{ resto.name }}</b>
+                                    <br>
+                                    <small style="text-transform: uppercase; color: grey;"><b>{{ resto.category }}</b></small>
+                                </div>
+                            </div>
+                            <div class="card-body" style="color: grey;">
+                                {{ resto.description }}
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <script>
+
+
+
+                        
+                        function getRestaurants(){
+                            $.getJSON('/shop/restaurants/').then(function (response) {
+                                response = response.restaurants;
+                                let opennedRest = [];
+                                let closedRest = [];
+                                response.forEach(function(element, index){
+                                    if (element.isOpen) {
+                                        opennedRest.push(element);
+                                    }else{
+                                        closedRest.push(element);
+                                    }
+                                });
+                                var vueNotification = new Vue({
+                                    el: '#openned-resto',
+                                    data: {
+                                        restaurants: opennedRest,
+                                    }
+                                });
+                                var vueNotification = new Vue({
+                                    el: '#closed-resto',
+                                    data: {
+                                        restaurants: closedRest,
+                                    }
+                                });
+                                
+                            });
+                        }
+
+
+                        
+                        $( document ).ready(function() {
+                            getRestaurants();
+                        });
+
+
+
+
+                    </script>
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <div id="copyright"></div>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div id="logout_modal"></div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        $(function(){
+            $("#sidebar").load("components/sidebar.html");
+            $("#topbar").load("components/topbar.html");
+            $("#copyright").load("components/footer.html");
+            $("#logout_modal").load("components/logout_modal.html");
+            
+            $(".current-year").html(new Date().getFullYear());
+        });
+    </script>
+</body>
+
+</html>

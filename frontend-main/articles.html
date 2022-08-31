@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Articles</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div id="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Les articles de mon restaurant</h1>
+                    <a class="btn btn-primary mt-2 mb-2" href="nouvel-article.html">Créer un nouvel article</a>
+                </div>
+
+                <div class="px-4 d-none" id="loader">
+                    <div class="row gx-3 my-5">
+                        <div class="col-12 my-5">
+                            <div class="d-flex w-100 justify-content-center">
+                                    <span class="spinner-grow text-primary mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-secondary mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-success mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-danger mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-warning mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-info mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                                <span class="spinner-grow text-dark mx-2" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </span>
+                            </div>
+
+                        </div>
+                        <div class="d-flex w-100 justify-content-center">
+                            <p>Suppression de l'article...
+                            <p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ajax" class="w-100 text-center"></div>
+
+                <div id="articles">
+                    <div class="" v-for="article in articles" :key="article._id">
+                        <div class="card mt-2 mb-2" :id="article._id">
+                            <div class="card-body">
+                                <div class="d-flex flex-column flex-md-row w-100">
+                                    <img v-if="article.image !== ''" :src="article.image" height="200" id="article-image" alt="Image de l'article">
+                                    <img v-else src="http://placehold.jp/200x200.png" height="200" id="article-image" alt="Image de l'article">
+                                    <div class="w-100 ml-3">
+                                        <h5 class="card-title w-100 d-flex justify-content-between">{{ article.name }}
+                                            <div class="">
+                                                <a onclick="editArticle(this)" style="cursor:pointer;" :data-id="article._id" class="article-edit"><i class="far fa-edit"></i></a>
+                                                <a onclick="askConfirmation(this)" style="cursor:pointer;" :data-id="article._id" class="article-remove"><i style="color:red;" class="fa-solid fa-trash-can"></i></a>
+                                            </div>
+                                        </h5>
+                                        <p><strong>{{ article.type }}</strong> :  {{ article.price }}€</p>
+                                        <p class="mb-0">{{ article.description }}</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal" tabindex="-1" role="dialog" id="article-remove-modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Demande de confirmation</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Vous souhaitez supprimer un article. La confirmation entraînera la suppression définitive de l'article. Confirmez-vous ?</p>
+                                <span id="article-id" class="d-none"></span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" id="article-delete-modal-confirmation" class="btn btn-danger" onclick="removeArticle()">Oui, supprimer l'article</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Non, fermer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <script>
+                    $(document).ready(function () {
+
+                        $("#ajax").html('<div class="spinner-border" role="status"></div>');
+                        $("#articles").hide();
+
+                        let app = new Vue({
+                            el: '#articles',
+                            data: {
+                                articles: [],
+                                errors: [],
+                            },
+                            mounted: function () {
+                                this.loadArticles();
+                            },
+                            methods: {
+                                loadArticles() {
+                                    let restaurant = $.ajax({
+                                        type: "GET",
+                                        dataType: "json",
+                                        url: '/shop/restaurants/owner',
+                                    })
+                                        .then((response) => {
+                                            $.ajax({
+                                                type: "GET",
+                                                dataType: "json",
+                                                url: '/shop/articles/restaurants/' + response.restaurant._id,
+                                            })
+                                                .then((response) => {
+                                                    this.articles = response.articles;
+                                                    $("#ajax").hide();
+                                                    $("#articles").show();
+                                                });
+                                        })
+                                        .catch((error) => {
+                                            console.log(error);
+                                        });
+                                }
+                            }
+                        });
+                    });
+
+                    function askConfirmation(el) {
+                        $('#article-id').val(el.dataset.id);
+                        $('#article-remove-modal').modal('toggle');
+                    }
+
+                    function removeArticle() {
+                        $("#loader").removeClass("d-none");
+                        $('#article-remove-modal').modal('hide');
+                        setTimeout(() => {
+                            $.ajax({
+                                type: "DELETE",
+                                dataType: "json",
+                                url: '/shop/articles/' + $('#article-id').val(),
+                            })
+                            .then(() => {
+                                $("#loader").html(`
+                                            <div class="d-flex w-100 justify-content-center my-2 pt-5">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="#86e22a" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                                </svg>
+                                            </div>
+                                            <div class="d-flex w-100 justify-content-center pt-5">
+                                                <p>Article supprimé</p>
+                                            </div>
+                `                        );
+                                setTimeout(() => {$("#loader").html('');}, 2000);
+                                location.reload();
+                            })
+                            .catch((error) => {
+                                $("#loader").html(`
+                                                <div class="d-flex w-100 justify-content-center my-2 pt-5">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" fill="red" class="bi bi-shield-lock" viewBox="0 0 16 16">
+                                                        <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                                                        <path d="M9.5 6.5a1.5 1.5 0 0 1-1 1.415l.385 1.99a.5.5 0 0 1-.491.595h-.788a.5.5 0 0 1-.49-.595l.384-1.99a1.5 1.5 0 1 1 2-1.415z"/>
+                                                    </svg>
+                                                </div>
+                                                <div class="d-flex w-100 justify-content-center pt-5">
+                                                    <p>Une erreur est survenue. Merci de réessayer plus tard.</p>
+                                                </div>
+                                            `);
+                                setTimeout(() => {$("#loader").html('');}, 2000);
+                                location.reload();
+                            });
+                        }, 3000);
+                    }
+
+                    function editArticle(el) {
+                        console.log(el.dataset.id);
+                        window.location.href = "/editer-article?article="+el.dataset.id;
+                    }
+
+
+                </script>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <div id="copyright"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div id="logout_modal"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<script>
+    $(function () {
+        $("#sidebar").load("/components/sidebar.html");
+        $("#topbar").load("/components/topbar.html");
+        $("#copyright").load("/components/footer.html");
+        $("#logout_modal").load("/components/logout_modal.html");
+
+        $(".current-year").html(new Date().getFullYear());
+    });
+</script>
+</body>
+
+</html>

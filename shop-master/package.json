@@ -1,0 +1,20 @@
+{
+  "name": "shop",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "nodemon ./bin/www",
+    "start-gendoc": "node swagger.js"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.1",
+    "express": "~4.16.1",
+    "mongoose": "^6.3.6",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.16",
+    "swagger-autogen": "^2.21.4",
+    "swagger-ui-express": "^4.4.0"
+  }
+}

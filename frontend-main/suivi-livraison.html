@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Cesi Eats - Suivi de livraison</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/img/favicon/site.webmanifest">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="/vendor/jquery/jquery.min.js"></script>
+
+    <!-- Custom styles for this template-->
+    <link href="/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<style>
+    .timeline_area {
+        position: relative;
+        z-index: 1;
+    }
+
+    .single-timeline-area {
+        position: relative;
+        z-index: 1;
+        padding-left: 180px;
+    }
+
+    @media only screen and (max-width: 575px) {
+        .single-timeline-area {
+            padding-left: 100px;
+        }
+    }
+
+    .single-timeline-area .timeline-date {
+        position: absolute;
+        width: 180px;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -ms-grid-row-align: center;
+        align-items: center;
+        -webkit-box-pack: end;
+        -ms-flex-pack: end;
+        justify-content: flex-end;
+        padding-right: 60px;
+    }
+
+    @media only screen and (max-width: 575px) {
+        .single-timeline-area .timeline-date {
+            width: 100px;
+        }
+    }
+
+    .single-timeline-area .timeline-date::after {
+        position: absolute;
+        width: 3px;
+        height: 100%;
+        content: "";
+        background-color: #ebebeb;
+        top: 0;
+        right: 30px;
+        z-index: 1;
+    }
+
+    .single-timeline-area .timeline-date::before {
+        position: absolute;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background-color: #f1c40f;
+        content: "";
+        top: 50%;
+        right: 26px;
+        z-index: 5;
+        margin-top: -5.5px;
+    }
+
+    .single-timeline-area .timeline-date p {
+        margin-bottom: 0;
+        color: #020710;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: 500;
+    }
+
+    .single-timeline-area .single-timeline-content {
+        position: relative;
+        z-index: 1;
+        padding: 30px 30px 25px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        margin-top: 15px;
+    }
+
+    @media only screen and (max-width: 575px) {
+        .single-timeline-area .single-timeline-content {
+            padding: 20px;
+        }
+    }
+
+    .single-timeline-area .single-timeline-content .timeline-icon {
+        -webkit-transition-duration: 500ms;
+        transition-duration: 500ms;
+        width: 30px;
+        height: 30px;
+        background-color: #f1c40f;
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 30px;
+        flex: 0 0 30px;
+        text-align: center;
+        max-width: 30px;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .single-timeline-area .single-timeline-content .timeline-icon i {
+        color: #ffffff;
+        line-height: 30px;
+    }
+
+    .single-timeline-area .single-timeline-content .timeline-text h6 {
+        -webkit-transition-duration: 500ms;
+        transition-duration: 500ms;
+    }
+
+    .single-timeline-area .single-timeline-content .timeline-text p {
+        font-size: 13px;
+        margin-bottom: 0;
+    }
+
+    .single-timeline-area .single-timeline-content:hover .timeline-icon,
+    .single-timeline-area .single-timeline-content:focus .timeline-icon {
+        background-color: #020710;
+    }
+
+    .single-timeline-area .single-timeline-content:hover .timeline-text h6,
+    .single-timeline-area .single-timeline-content:focus .timeline-text h6 {
+        color: #3f43fd;
+    }
+</style>
+
+<body id="page-top">
+
+<!-- Page Wrapper -->
+<div id="wrapper">
+
+    <!-- Sidebar -->
+    <div id="sidebar"></div>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+        <!-- Main Content -->
+        <div id="content">
+
+            <!-- Topbar -->
+            <div id="topbar"></div>
+            <!-- End of Topbar -->
+
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+
+                <!-- Page Heading -->
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <h1 class="h3 mb-0 text-gray-800">Suivi de livraison</h1>
+                </div>
+
+                <div id="order">
+
+                    <h5>Commande numéro : {{ order._id }}</h5>
+
+                    <div class="row">
+                        <iframe class="col-md-6 col-12" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d10832.581809467436!2d-2.2580048!3d47.252859!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x8a57536453c1e875!2sCampus%20CESI!5e0!3m2!1sfr!2sfr!4v1656432777336!5m2!1sfr!2sfr"
+                                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        <section class="col-md-6 col-12 d-flex justify-content-center align-items-center" style="max-height:450px; overflow-y: scroll;">
+                            <div class="apland-timeline-area">
+                                <div class="single-timeline-area" v-for="status in order.status"
+                                     :key="status.timestamp">
+                                    <div class="timeline-date wow fadeInLeft" data-wow-delay="0.1s"
+                                         style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInLeft;">
+                                        <p>{{ status.name }}</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 col-lg-4">
+                                            <div class="single-timeline-content d-flex wow fadeInLeft"
+                                                 data-wow-delay="0.3s"
+                                                 style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInLeft;">
+                                                <div class="">
+                                                    <h6>{{
+                                                            new Date(status.timestamp).toLocaleString('fr-FR', { timeZone: 'Europe/Madrid' })
+                                                        }}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <div class="col-12 mt-4 mb-4">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Nom de l'élément</th>
+                                        <th scope="col">Quantité</th>
+                                        <th scope="col">Prix unitaire</th>
+                                        <th scope="col">Prix total</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-if="order.articles.length > 0">
+                                        <th colspan="4" class="text-center" style="background-color: white; color: lightskyblue; font-size: 1.5em;">Articles</th>
+                                    </tr>
+                                    <tr v-if="order.articles.length > 0" class="" v-for="article in order.articles" :key="article._id">
+                                        <th scope="row">{{ article.name }}</th>
+                                        <td>{{ article.count }}</td>
+                                        <td>{{ article.price }}€</td>
+                                        <td>{{ article.count * article.price }}€</td>
+                                    </tr>
+                                    <tr v-if="order.menus.length > 0">
+                                        <th colspan="4" class="text-center" style="background-color: white; color: lightskyblue; font-size: 1.5em;">Menus</th>
+                                    </tr>
+                                    <tr  v-if="order.menus.length > 0" class="" v-for="menu in order.menus" :key="menu._id">
+                                        <th scope="row">{{ menu.name }}</th>
+                                        <td>{{ menu.count }}</td>
+                                        <td>{{ menu.price }}€</td>
+                                        <td>{{ menu.count * menu.price }}€</td>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="4" style="background-color: white; text-align:right; color: black; font-size: 1.2em;">Total : {{ order.price }}€</th>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+
+
+                <script>
+
+                    $(document).ready(function () {
+                        let app = new Vue({
+                            el: '#order',
+                            data: {
+                                order: {},
+                            },
+                            mounted: function () {
+                                this.loadOrder();
+                                window.setInterval(() => {
+                                    this.loadOrder();
+                                }, 10000)
+                            },
+                            methods: {
+                                loadOrder() {
+                                    $.ajax({
+                                        type: "GET",
+                                        dataType: "json",
+                                        url: '/orders/orders/' + new URLSearchParams(window.location.search).get('order'),
+                                    }).then((response) => {
+                                        this.order = response.order;
+                                        this.order.status.forEach((status) => {
+                                            switch (status.name) {
+                                                case "created":
+                                                    status.name = "Créée"
+                                                    break;
+                                                case "validated":
+                                                    status.name = "Validée"
+                                                    break;
+                                                case "assigned":
+                                                    status.name = "Acceptée par un livreur"
+                                                    break;
+                                                case "indelivery":
+                                                    status.name = "En cours de livraison"
+                                                    break;
+                                                case "delivered":
+                                                    status.name = "Livrée"
+                                                    break;
+                                                default:
+                                                    status.name = "Inconnu"
+                                                    break;
+                                            }
+                                        });
+
+                                    }).catch((error) => console.log(error));
+                                },
+                            }
+                        });
+                    });
+                </script>
+
+
+            </div>
+            <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <div id="copyright"></div>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- Logout Modal-->
+<div id="logout_modal"></div>
+
+<!-- Bootstrap core JavaScript-->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+<!-- Custom scripts for all pages-->
+<script src="/js/sb-admin-2.min.js"></script>
+
+<script>
+    $(function () {
+        $("#sidebar").load("/components/sidebar.html");
+        $("#topbar").load("/components/topbar.html");
+        $("#copyright").load("/components/footer.html");
+        $("#logout_modal").load("/components/logout_modal.html");
+
+        $(".current-year").html(new Date().getFullYear());
+    });
+</script>
+</body>
+
+</html>

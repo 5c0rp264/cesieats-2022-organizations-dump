@@ -1,0 +1,41 @@
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">Même pas un p'tit burger avant de partir</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">Êtes-vous sûr de vouloir supprimer votre compte</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+            <a class="btn btn-danger" href="javascript:deleteAccount();">Supprimer mon compte définitivement</a>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    function deleteAccount(){
+        fetch('/accounts/0', {
+            method: 'DELETE',
+        })
+        .then(res => res.text()) // or res.json()
+        .then(res => console.log(res));
+
+        logout();
+    }
+    
+    function deleteAccountAdmin(){
+        let accountId = 26; // TODO : select value;
+        fetch('/accounts/'+accountId, {
+            method: 'DELETE',
+        })
+        .then(res => res.text()) // or res.json()
+        .then(res => console.log(res));
+
+        logout();
+    }
+</script>

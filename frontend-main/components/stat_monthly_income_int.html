@@ -1,0 +1,34 @@
+<div class="card border-left-primary shadow h-100 py-2">
+    <div class="card-body">
+        <div class="row no-gutters align-items-center">
+            <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                    Gains mensuels</div>
+                <div id="montly-income-int" class="h5 mb-0 font-weight-bold text-gray-800"></div>
+            </div>
+            <div class="col-auto">
+                <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+$( document ).ready(function() {
+    getCtx(function() {
+        $.getJSON('/statistics/sales/sum/month/'+restoID).then(function (response) {
+            if (response.length > 0){
+                console.log(response);
+                $("#montly-income-int").text(response[response.length-1].sale);
+            }else{
+                $("#montly-income-int").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+            }
+        }).fail(function (error) {
+            $("#montly-income-int").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+        });
+    });
+});
+
+
+</script>

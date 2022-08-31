@@ -1,0 +1,77 @@
+<div class="card shadow mb-4">
+    <!-- Card Header - Dropdown -->
+    <div
+        class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary">
+            Chiffre d'affaire par mois
+        </h6>
+        <div class="dropdown no-arrow">
+        </div>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body" id="stat-montly-income-plot-wrapper">
+        <canvas id="stat-montly-income-plot" class="chartjs-render-monitor" height="400" width="400"></canvas>
+    </div>
+</div>
+
+<script>
+
+$( document ).ready(function() {
+    getCtx(function(){
+        $.getJSON('statistics/sales/sum/month/'+restoID).then(function (response) {
+            if (response.length > 0){
+                console.log(response);
+                const dataStatIncome = response.map(data =>  ({ 
+                    x: data._id.year + "-" + data._id.month + "-" + data._id.day, 
+                    y: data.sale 
+                }));
+                $("stat-montly-income-plot-wrapper").html('<canvas id="stat-montly-income-plot" class="chartjs-render-monitor"></canvas>');
+                const componentCtx = document.getElementById('stat-montly-income-plot').getContext('2d');
+                const myChart = new Chart(componentCtx, {
+                    type: 'line',
+                    data: {
+                        datasets: [{
+                            data: dataStatIncome,
+                            label: 'MONEEYYY',
+                            backgroundColor: '#224abe'
+                        }],
+                    },
+                    options: {
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'month'
+                                }
+                            },
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero: true,
+                                    callback: function(value, index, values) {
+                                        if(parseInt(value) >= 1000){
+                                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '€';
+                                        } else {
+                                            return value  + '€';
+                                        }
+                                    }
+                                }
+                            }]
+                        }
+                    }
+                });
+            }else{
+                $("#stat-montly-income-plot-wrapper").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+            }
+
+        }).fail(function (error) {
+            $("#stat-montly-income-plot-wrapper").html('<div class="alert alert-danger" role="alert">Une erreur s\'est produite lors du chargement des données.</div>');
+        });
+    });
+    
+});
+
+
+</script>

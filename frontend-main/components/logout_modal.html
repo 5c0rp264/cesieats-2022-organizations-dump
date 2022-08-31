@@ -1,0 +1,51 @@
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+aria-hidden="true">
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Prêt à partir ?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">Cliquez sur "Déconnexion" pour quitter votre session actuelle</div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Annuler</button>
+            <a class="btn btn-danger" href="javascript:logout();">Déconnexion</a>
+        </div>
+    </div>
+</div>
+</div>
+
+<script>
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function parseJwt(token){
+        return JSON.parse(decodeURIComponent(window.atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')).split('').map(function(c){
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);}).join('')));
+    };
+
+    function logout(){
+        let id = parseJwt(getCookie('jwt')).uid;
+        console.log(id);
+        fetch("/accounts/logout/"+id).then(function(response) {
+            if (response.status >= 200 && response.status < 300){
+                // Login with the cookie
+                eraseCookie('jwt')
+                eraseCookie('cart-menu')
+                eraseCookie('cart-article')
+                eraseCookie('cur-restoID')
+
+                location.replace('/index.html');
+            }
+        });    
+    }
+
+    function eraseCookie(name) {
+        document.cookie = name + '=; Max-Age=0'
+    }
+</script>
